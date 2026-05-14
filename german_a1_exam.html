@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>German A1.1 — MCQ পরীক্ষা</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --card: #ffffff;
+    --border: #e2e0d8;
+    --text: #1a1a18;
+    --muted: #6b6960;
+    --accent: #2d5a27;
+    --accent-light: #eaf3e8;
+    --danger: #8b2020;
+    --danger-light: #fdf0f0;
+    --blue: #1a3d6e;
+    --blue-light: #eef3fb;
+    --purple-bg: #f0eefe;
+    --purple-text: #3d2e8f;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', 'Noto Sans Bengali', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .top-bar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .top-bar h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+
+  .top-bar p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 1px;
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+
+  .stats-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .stat-pill {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--muted);
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+
+  .stat-pill span {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .main {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    transition: border-color .2s;
+  }
+
+  .q-card.answered {
+    border-color: #c8d8c6;
+  }
+
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .q-num {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .cat-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--purple-bg);
+    color: var(--purple-text);
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+
+  .q-txt {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.65;
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+
+  .opts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .opt {
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    cursor: pointer;
+    background: var(--card);
+    color: var(--text);
+    text-align: left;
+    line-height: 1.4;
+    transition: background .1s, border-color .1s, transform .08s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .opt:hover:not(:disabled) {
+    background: var(--bg);
+    border-color: #b0ada4;
+    transform: translateY(-1px);
+  }
+
+  .opt:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .opt .lbl {
+    font-weight: 600;
+    margin-right: 4px;
+    color: var(--muted);
+  }
+
+  .opt:disabled { cursor: default; transform: none; }
+
+  .opt.correct {
+    background: var(--accent-light);
+    border-color: #639922;
+    color: var(--accent);
+  }
+
+  .opt.correct .lbl { color: var(--accent); }
+
+  .opt.wrong {
+    background: var(--danger-light);
+    border-color: #e24b4a;
+    color: var(--danger);
+  }
+
+  .opt.wrong .lbl { color: var(--danger); }
+
+  .opt.show-correct {
+    background: var(--accent-light);
+    border-color: #639922;
+    color: var(--accent);
+  }
+
+  .opt.show-correct .lbl { color: var(--accent); }
+
+  .opt.pending-selected {
+    background: var(--blue-light);
+    border-color: #378ADD;
+    color: var(--blue);
+  }
+
+  .opt.pending-selected .lbl { color: var(--blue); }
+
+  .feedback {
+    margin-top: 8px;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--muted);
+    display: none;
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+
+  .feedback.ok { color: var(--accent); background: var(--accent-light); }
+  .feedback.bad { color: var(--danger); background: var(--danger-light); }
+  .feedback.skip { color: var(--muted); }
+
+  .lock-icon {
+    float: right;
+    font-size: 12px;
+    color: var(--muted);
+    display: none;
+  }
+
+  .q-card.answered .lock-icon { display: inline; }
+
+  .submit-wrap {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .submit-btn {
+    padding: 12px 40px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--text);
+    color: #fff;
+    transition: opacity .15s, transform .1s;
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+
+  .submit-btn:hover { opacity: .85; transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: .4; cursor: default; transform: none; }
+
+  .result-box {
+    display: none;
+    margin-top: 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .result-emoji { font-size: 40px; margin-bottom: .75rem; }
+
+  .result-score {
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .result-pct {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+
+  .result-msg {
+    margin-top: 1rem;
+    font-size: 15px;
+    color: var(--text);
+    font-family: 'Noto Sans Bengali', sans-serif;
+    line-height: 1.6;
+  }
+
+  .progress-bar-wrap {
+    background: var(--border);
+    border-radius: 999px;
+    height: 4px;
+    margin-top: 1.25rem;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--accent);
+    border-radius: 999px;
+    width: 0%;
+    transition: width .3s ease;
+  }
+
+  @media(max-width: 600px) {
+    .opts { grid-template-columns: 1fr; }
+    .top-bar { padding: .75rem 1rem; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .stats-bar { flex-wrap: wrap; }
+    .main { padding: 1rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>🇩🇪 German A1.1 — MCQ পরীক্ষা</h1>
+    <p>একটি উত্তরে click করলে সেই প্রশ্ন lock হয়ে যাবে</p>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-pill">উত্তর: <span id="s-ans">0</span>/25</div>
+    <div class="stat-pill">বাকি: <span id="s-left">25</span></div>
+    <div class="stat-pill" id="s-score-pill" style="display:none">স্কোর: <span id="s-score">—</span></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="progress-bar-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div style="height:1.25rem"></div>
+  <div id="qc"></div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" id="sub-btn" onclick="submitExam()">ফলাফল দেখো</button>
+  </div>
+
+  <div class="result-box" id="result-box">
+    <div class="result-emoji" id="r-emoji"></div>
+    <div class="result-score" id="r-score"></div>
+    <div class="result-pct" id="r-pct"></div>
+    <div class="result-msg" id="r-msg"></div>
+  </div>
+</div>
+
+<script>
+const Qs=[
+  {cat:"অভিবাদন",q:"সকালে কাউকে দেখলে কী বলবে?",o:["Gute Nacht","Guten Morgen","Auf Wiedersehen","Tschüss"],a:1},
+  {cat:"অভিবাদন",q:"ভদ্রভাবে বিদায় জানাতে কী বলবে?",o:["Hallo","Bitte","Auf Wiedersehen","Danke"],a:2},
+  {cat:"পরিচয়",q:"'আমার নাম আনা' জার্মানে কীভাবে বলবে?",o:["Ich bin müde","Mein Name ist Ana","Ich habe Hunger","Du heißt Ana"],a:1},
+  {cat:"পরিচয়",q:"'তুমি কোথা থেকে এসেছ?' জার্মানে কীভাবে জিজ্ঞেস করবে?",o:["Wie geht es dir?","Was machst du?","Woher kommst du?","Wie heißt du?"],a:2},
+  {cat:"সংখ্যা",q:"জার্মানে 'পাঁচ' কোনটি?",o:["Vier","Sechs","Fünf","Sieben"],a:2},
+  {cat:"সংখ্যা",q:"'দশ' জার্মানে কী?",o:["Acht","Neun","Zehn","Elf"],a:2},
+  {cat:"রং",q:"'লাল' জার্মানে কোনটি?",o:["Blau","Grün","Gelb","Rot"],a:3},
+  {cat:"রং",q:"'নীল' জার্মানে কীভাবে বলে?",o:["Blau","Weiß","Schwarz","Grau"],a:0},
+  {cat:"পরিবার",q:"'মা' জার্মানে কোনটি?",o:["Vater","Bruder","Mutter","Schwester"],a:2},
+  {cat:"পরিবার",q:"জার্মানে 'ভাই' কোনটি?",o:["Schwester","Bruder","Onkel","Tante"],a:1},
+  {cat:"খাবার",q:"'পানি' জার্মানে কোনটি?",o:["Milch","Saft","Wasser","Brot"],a:2},
+  {cat:"খাবার",q:"'রুটি' জার্মানে কোনটি?",o:["Käse","Brot","Apfel","Ei"],a:1},
+  {cat:"ক্রিয়া",q:"'আমি খাচ্ছি' বলতে কোনটি সঠিক?",o:["Ich trinke","Ich esse","Ich schlafe","Ich lerne"],a:1},
+  {cat:"ক্রিয়া",q:"'সে বাস করে' বলতে কোনটি সঠিক?",o:["Er lernt","Er spielt","Er wohnt","Er arbeitet"],a:2},
+  {cat:"সময়",q:"'আজকে' জার্মানে কোনটি?",o:["Gestern","Morgen","Heute","Abend"],a:2},
+  {cat:"সময়",q:"আগামীকাল জার্মানে কোনটি?",o:["Gestern","Heute","Morgen","Nacht"],a:2},
+  {cat:"প্রশ্নবোধক",q:"'কীভাবে?' জার্মানে কোনটি?",o:["Was","Wer","Wie","Wo"],a:2},
+  {cat:"প্রশ্নবোধক",q:"'কোথায়?' জার্মানে কোনটি?",o:["Wann","Wie","Was","Wo"],a:3},
+  {cat:"বিশেষণ",q:"'বড়' জার্মানে কোনটি?",o:["Klein","Groß","Alt","Neu"],a:1},
+  {cat:"বিশেষণ",q:"'ছোট' জার্মানে কোনটি?",o:["Groß","Schön","Klein","Warm"],a:2},
+  {cat:"পেশা",q:"'শিক্ষক' জার্মানে কোনটি?",o:["Arzt","Lehrer","Koch","Polizist"],a:1},
+  {cat:"পেশা",q:"'ডাক্তার' জার্মানে কোনটি?",o:["Lehrer","Fahrer","Arzt","Bäcker"],a:2},
+  {cat:"দিনের নাম",q:"'সোমবার' জার্মানে কোনটি?",o:["Dienstag","Mittwoch","Montag","Freitag"],a:2},
+  {cat:"দিনের নাম",q:"'শুক্রবার' জার্মানে কোনটি?",o:["Donnerstag","Freitag","Samstag","Sonntag"],a:1},
+  {cat:"বাক্যগঠন",q:"'আমি ছাত্র' জার্মানে কোনটি সঠিক?",o:["Ich bin Lehrer","Du bist Student","Ich bin Student","Er ist Schüler"],a:2},
+];
+
+const labels=["ক","খ","গ","ঘ"];
+const selected=new Array(25).fill(null);
+const locked=new Array(25).fill(false);
+let submitted=false;
+
+function updateStats(){
+  const done=selected.filter(x=>x!==null).length;
+  document.getElementById("s-ans").textContent=done;
+  document.getElementById("s-left").textContent=25-done;
+  document.getElementById("pbar").style.width=(done/25*100)+"%";
+}
+
+function choose(qi,oi){
+  if(locked[qi]||submitted)return;
+  selected[qi]=oi;
+  locked[qi]=true;
+  const card=document.getElementById("card-"+qi);
+  card.classList.add("answered");
+  const btns=document.querySelectorAll(".opt-"+qi);
+  btns.forEach(b=>{b.disabled=true;b.classList.remove("pending-selected");});
+  btns[oi].classList.add("pending-selected");
+  updateStats();
+}
+
+function submitExam(){
+  if(submitted)return;
+  submitted=true;
+  let correct=0;
+  Qs.forEach((q,i)=>{
+    const btns=document.querySelectorAll(".opt-"+i);
+    btns.forEach(b=>{b.disabled=true;});
+    const sel=selected[i];
+    const ans=q.a;
+    if(sel!==null){
+      btns[sel].classList.remove("pending-selected");
+      if(sel===ans){btns[sel].classList.add("correct");correct++;}
+      else{btns[sel].classList.add("wrong");btns[ans].classList.add("show-correct");}
+    } else {
+      btns[ans].classList.add("show-correct");
+    }
+    const fb=document.getElementById("fb-"+i);
+    fb.style.display="block";
+    if(sel===null){fb.textContent="উত্তর দেওয়া হয়নি — সঠিক: "+labels[ans]+") "+q.o[ans];fb.className="feedback skip";}
+    else if(sel===ans){fb.textContent="✓ সঠিক উত্তর!";fb.className="feedback ok";}
+    else{fb.textContent="✗ ভুল। সঠিক উত্তর: "+labels[ans]+") "+q.o[ans];fb.className="feedback bad";}
+  });
+  const pct=Math.round(correct/25*100);
+  document.getElementById("s-score-pill").style.display="inline-block";
+  document.getElementById("s-score").textContent=correct+"/25";
+  document.getElementById("sub-btn").disabled=true;
+  document.getElementById("sub-btn").textContent="পরীক্ষা শেষ";
+  const rb=document.getElementById("result-box");
+  rb.style.display="block";
+  document.getElementById("r-emoji").textContent=pct>=80?"🎉":pct>=60?"👍":"📚";
+  document.getElementById("r-score").textContent=correct+" / 25";
+  document.getElementById("r-pct").textContent="("+pct+"%)";
+  const msgs=["আরও পড়ো, তুমি পারবে!","চেষ্টা চালিয়ে যাও, আবার পড়ো।","ভালো চেষ্টা! আরও একটু অনুশীলন দরকার।","বেশ ভালো করেছ!","চমৎকার! A1.1 ভিত্তি খুব শক্তিশালী 🇩🇪"];
+  const mi=pct<40?0:pct<60?1:pct<70?2:pct<80?3:4;
+  document.getElementById("r-msg").textContent=msgs[mi];
+  rb.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function render(){
+  const c=document.getElementById("qc");
+  Qs.forEach((q,i)=>{
+    const optHtml=q.o.map((o,j)=>`<button class="opt opt-${i}" onclick="choose(${i},${j})"><span class="lbl">${labels[j]})</span>${o}</button>`).join("");
+    const div=document.createElement("div");
+    div.className="q-card";
+    div.id="card-"+i;
+    div.innerHTML=`
+      <div class="q-meta">
+        <span class="q-num">প্রশ্ন ${i+1}</span>
+        <span class="cat-badge">${q.cat}</span>
+        <span class="lock-icon">🔒</span>
+      </div>
+      <div class="q-txt">${q.q}</div>
+      <div class="opts">${optHtml}</div>
+      <div class="feedback" id="fb-${i}"></div>`;
+    c.appendChild(div);
+  });
+}
+
+render();
+updateStats();
+</script>
+</body>
+</html>
